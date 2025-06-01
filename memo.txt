@@ -2,3 +2,7 @@ conda create -n mp-env python=3.8
 conda activate mp-env
 pip install -r requirements.txt
 curl -X POST -F "image=@{path2yourinput.jpg}" http://127.0.0.1:5000/process-image --output result.jpg
+
+photo credit:
+https://www.pexels.com/photo/woman-wearing-coat-762020/
+by Andrea Piacquadio
