@@ -1,4 +1,4 @@
-# import awsgi
+import awsgi
 from flask import Flask, jsonify, request, send_file
 
 from rembg import new_session, remove
@@ -46,11 +46,11 @@ def process_image():
 @app.route("/users", methods=["GET"])
 def get_users():
     return jsonify(users)
+# for local use
+# if __name__ == "__main__":
+#     app.run(host="0.0.0.0", port=8000, debug=True)
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
 
 
-
-# def lambda_handler(event, context):
-#     return awsgi.response(app, event, context, base64_content_types={"image/png"})
+def lambda_handler(event, context):
+    return awsgi.response(app, event, context, base64_content_types={"image/png"})

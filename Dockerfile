@@ -1,14 +1,9 @@
-# syntax=docker/dockerfile:1
-
-FROM python:3.10-slim
-
-WORKDIR /python-docker
+FROM public.ecr.aws/lambda/python:3.12
 
 COPY requirements.txt requirements.txt
+RUN pip install --upgrade pip
 RUN pip3 install -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
-
-CMD [ "python3", "app.py"]
+CMD ["app.lambda_handler"]
