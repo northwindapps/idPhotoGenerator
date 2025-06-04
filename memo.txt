@@ -7,3 +7,5 @@ docker run -p 8000:8000 python-docker
 photo credit:
 https://www.pexels.com/photo/woman-wearing-coat-762020/
 by Andrea Piacquadio
+
+docker build --tag idphoto-flask .             

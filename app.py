@@ -8,7 +8,7 @@ import io
 
 app = Flask(__name__)
 
-session = new_session("isnet-general-use")
+session = new_session("u2net")
 
 # Sample data for a sample route
 users = [
