@@ -2,6 +2,7 @@ conda create -n mp-env python=3.8
 conda activate mp-env
 pip install -r requirements.txt
 curl -X POST -F "image=@/path/to/image/pexels-olly-762020.jpg" http://127.0.0.1:5001/process-image --output result.jpg
+docker run -p 8000:8000 python-docker
 
 photo credit:
 https://www.pexels.com/photo/woman-wearing-coat-762020/
