@@ -1,8 +1,10 @@
+# import awsgi
 from flask import Flask, jsonify, request, send_file
 
 from rembg import new_session, remove
 from PIL import Image
 import io
+
 
 app = Flask(__name__)
 
@@ -47,5 +49,9 @@ def get_users():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    # app.run(host="0.0.0.0", port=8080, debug=True)
 
 
+
+# def lambda_handler(event, context):
+#     return awsgi.response(app, event, context, base64_content_types={"image/png"})

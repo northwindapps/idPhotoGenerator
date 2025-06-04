@@ -1,3 +1,5 @@
 rembg == 2.0.61
 onnxruntime == 1.19.2
 flask == 3.0.3
+aws_wsgi == 0.2.7
+pillow == 11.2.1
