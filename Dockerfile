@@ -8,9 +8,6 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-# Explicitly ensure the ONNX file is copied (if not already in your repo root)
-# COPY u2net_human_seg.onnx /var/task/u2net_human_seg.onnx
-
 CMD ["app.lambda_handler"]
 
 # FROM python:3.9-slim
