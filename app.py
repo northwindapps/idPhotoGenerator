@@ -65,16 +65,15 @@ def process_image():
     result.save(img_io, format="JPEG")
     img_io.seek(0)
 
-    # Return Lambda proxy-compatible response
-    # return {
-    #     "statusCode": 200,
-    #     "headers": {
-    #         "Content-Type": "image/jpeg"
-    #     },
-    #     "isBase64Encoded": True,
-    #     "body": base64.b64encode(img_io.getvalue()).decode("utf-8")
-    # }
-    return Response(img_io.getvalue(), mimetype='image/jpeg')
+    return {
+    "statusCode": 200,
+    "headers": {
+        "Content-Type": "image/jpeg"
+    },
+    "isBase64Encoded": True,
+    "body": base64.b64encode(img_io.getvalue()).decode("utf-8")
+    }
+    # return Response(img_io.getvalue(), mimetype='image/jpeg') for local testing
 
 
 @app.route("/test-upload", methods=["POST"])

@@ -9,3 +9,12 @@ https://www.pexels.com/photo/woman-wearing-coat-762020/
 by Andrea Piacquadio
 
 docker build --tag idphoto-flask .             
+
+docker tag idphoto-flask:latest 378829015448.dkr.ecr.ap-northeast-1.amazonaws.com/idphoto-flask:latest
+
+docker push 378829015448.dkr.ecr.ap-northeast-1.amazonaws.com/idphoto-flask:latest
+
+
+docker build -t idphoto-flask-local .      
+
+docker run -p 5001:5000 idphoto-flask-local
