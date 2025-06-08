@@ -22,60 +22,52 @@ users = [
 @app.route("/process-image", methods=["POST"])
 def process_image():
     if "image" not in request.files:
-        print("Image key missing in request.files")
-        return {"error": "No image provided"}, 400
+        return jsonify({"error": "No image provided"}), 400
 
     uploaded_file = request.files["image"]
-
-    print(f"Received: {uploaded_file.filename}, Content-Type: {uploaded_file.content_type}")
-    print(f"Length: {len(uploaded_file.read())}")
     uploaded_file.seek(0)
 
     try:
         pil_image = Image.open(uploaded_file).convert("RGBA")
     except Exception as e:
-        print(f"Error processing image: {e}")
-        return {"error": str(e)}, 500
-    
+        return jsonify({"error": str(e)}), 500
+
     cv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGBA2BGR)
 
-    # Adjust brightness and contrast
-    alpha = float(request.args.get("alpha", 1.0))  # default 1.0
-    beta = int(request.args.get("beta", 0))        # default 0
+    alpha = float(request.args.get("alpha", 1.0))
+    beta = int(request.args.get("beta", 0))
     adjusted = cv2.convertScaleAbs(cv_image, alpha=alpha, beta=beta)
 
-    # Optionally apply gamma correction
-    # adjusted = adjust_gamma(adjusted, gamma=1.3)
-
-    # Convert back to PIL Image (RGBA for rembg)
     final_p_image = Image.fromarray(cv2.cvtColor(adjusted, cv2.COLOR_BGR2RGBA))
-
-    # Remove background
     foreground = remove(final_p_image, session=session)
 
-    # Create white background
     white_bg = Image.new("RGBA", foreground.size, (255, 255, 255, 255))
-    result = Image.alpha_composite(white_bg, foreground)
+    result = Image.alpha_composite(white_bg, foreground).convert("RGB")
 
-    # Convert to RGB
-    result = result.convert("RGB")
-
-    # Save to buffer
     img_io = io.BytesIO()
     result.save(img_io, format="JPEG")
     img_io.seek(0)
 
-    # Return Lambda proxy-compatible response
-    # return {
-    #     "statusCode": 200,
-    #     "headers": {
-    #         "Content-Type": "image/jpeg"
-    #     },
-    #     "isBase64Encoded": True,
-    #     "body": base64.b64encode(img_io.getvalue()).decode("utf-8")
-    # }
-    return Response(img_io.getvalue(), mimetype='image/jpeg')
+    encoded = base64.b64encode(img_io.getvalue()).decode("utf-8")
+    response = jsonify({
+        "body": encoded
+    })
 
+    response.headers.set("Access-Control-Allow-Origin", "*")
+    response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS")
+    response.headers.set("Access-Control-Allow-Headers", "Content-Type")
+    return response
+
+    # return Response(img_io.getvalue(), mimetype='image/jpeg') for local testing
+
+# Even in proxy mode, API Gateway often requires a clean response to OPTIONS.
+@app.route("/process-image", methods=["OPTIONS"])
+def options_process_image():
+    response = Response()
+    response.headers.set("Access-Control-Allow-Origin", "*")
+    response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS")
+    response.headers.set("Access-Control-Allow-Headers", "Content-Type")
+    return response
 
 @app.route("/test-upload", methods=["POST"])
 def test_upload():
