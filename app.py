@@ -53,6 +53,7 @@ def process_image():
         "body": encoded
     })
 
+    # CORS (Cross-Origin Resource Sharing) is a browser security feature. It only applies to client-side JavaScript running in the browser 
     response.headers.set("Access-Control-Allow-Origin", "*")
     response.headers.set("Access-Control-Allow-Methods", "POST, OPTIONS")
     response.headers.set("Access-Control-Allow-Headers", "Content-Type")
